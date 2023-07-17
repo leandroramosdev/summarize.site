@@ -233,6 +233,89 @@ const ce = ({ props, tag, children, name }, elementsObj) => {
   return elm;
 };
 
+function createTabs() {
+  let listTabsName = ["Home", "Prompts", "Plans", "Help"];
+  let listTabs = listTabsName.map((tab, index) => {
+    let defaultClass = "summarize__tab-item sumz-cursor-pointer sumz-text-center hover:sumz-text-gray-600 hover:sumz-border-b-gray-300 hover:sumz-border-b-2 sumz-h-[24px] sumz-w-[20%] ";
+    return {
+      tag: "li",
+      props: {
+        id: "summarize__tab-item-" + index,
+        className: defaultClass,
+        innerText: tab
+      },
+    };
+  })
+
+  let tabs = {
+    tag: "ul",
+    props: {
+      id: "summarize__tabs",
+      className: "sumz-flex sumz-justify-between sumz-h-full sumz-w-full sumz-overflow-y-auto sumz-px-4 sumz-mt-4"
+    },
+    children: listTabs,
+  }
+
+  return tabs;
+}
+
+function createHomeContainer() {
+  let homeContainer = {
+    tag: "div",
+    props: { className: "sumz-max-h-[80%] sumz-w-full sumz-overflow-y-auto sumz-px-4 sumz-py-4" },
+    children: [
+      {
+        tag: "div",
+        props: {
+          id: "summarize__body",
+          className: "sumz-text-3-xl sumz-mb-2 sumz-flex sumz-flex-col sumz-whitespace-pre-line sumz-text-gray-700"
+        },
+      },
+    ],
+  };
+
+  return homeContainer;
+}
+
+function createPromptsContainer() {
+  let promptsContainer = {
+    tag: "div",
+    props: {
+      id: "summarize__prompts",
+      className: "",
+      innerHTML: "prompts"
+    },
+  };
+
+  return promptsContainer;
+}
+
+function createPlansContainer() {
+  let plansContainer = {
+    tag: "div",
+    props: {
+      id: "summarize__plans",
+      className: "",
+      innerHTML: "plans"
+    },
+  };
+
+  return plansContainer;
+}
+
+function createHelpContainer() {
+  let helpContainer = {
+    tag: "div",
+    props: {
+      id: "summarize__help",
+      className: "",
+      innerHTML: "help"
+    },
+  };
+
+  return helpContainer;
+}
+
 function createContainer() {
   return ce({
     tag: "div",
@@ -254,72 +337,34 @@ function createContainer() {
               { tag: "img", props: { id: "summarize__close-button", className: "sumz-h-[24px] sumz-w-6 sumz-cursor-pointer sumz-rounded-lg hover:sumz-bg-sky-200", src: CrossIC, alt: "close" } }
             ],
           },
-          // divider
-          { tag: "div", props: { className: "sumz-w-full sumz-h-1 sumz-bg-gray-300" } },
           // body
           {
             tag: "div",
-            props: { className: "sumz-h-full sumz-w-full sumz-overflow-y-auto sumz-px-4 sumz-py-4" },
+            props: { className: "sumz-flex-row sumz-w-full sumz-max-h-[80%] sumz-items-center sumz-rounded-t-lg sumz-px-2 sumz-mb-2" },
             children: [
+              createTabs(),
               {
                 tag: "div",
-                props: { id: "summarize__body", className: "sumz-text-3-xl sumz-mb-2 sumz-flex sumz-flex-col sumz-whitespace-pre-line sumz-text-gray-700" },
-              },
-            ],
-          },
-          // divider
-          { tag: "div", props: { className: "sumz-w-full sumz-h-1 sumz-bg-gray-200" } },
-          // footer
-          {
-            tag: "div",
-            props: { className: "sumz-m-2" },
-            children: [
-              {
-                tag: "div",
-                props: { className: "sumz-flex sumz-h-[32px] sumz-w-full sumz-items-center sumz-justify-center" },
+                props: {
+                  className: "sumz-bg-gray-200 sumz-max-h-[80%] sumz-p-4",
+                },
                 children: [
                   {
                     tag: "div",
                     props: {
-                      className: "sumz-text-lg sumz-font-bold sumz-text-gray-600",
-                      innerText: "Help Us"
-                    },
-                  },
-                  {
-                    tag: "button",
-                    props: {
-                      id: "summarize__animation-button",
-                      onclick: () => window.open('https://tally.so/r/woD2eP', "_blank"),
-                      className: "sumz-rounded-full sumz-border-2 sumz-border-sky-600 sumz-m-2 sumz-px-1 sumz-py-1 sumz-text-lg sumz-text-sky-600 sumz-transition-colors hover:sumz-bg-sky-100",
+                      className: "sumz-white sumz-max-h-[60%] sumz-rounded-lg sumz-bg-white",
                     },
                     children: [
-                      {
-                        tag: "span",
-                        props: {
-                          className: "sumz-pointer-events-none sumz-absolute sumz-inset-0 -sumz-z-10 sumz-block",
-                          id: "summarize__sparkles-container"
-                        },
-                      },
-                      {
-                        tag: "span",
-                        props: {
-                          className: "sumz-block sumz-h-[16px] sumz-overflow-hidden sumz-z-10",
-                          id: "summarize__letters-container"
-                        },
-                      },
-                    ],
-                  }
-                ],
-              },
-              {
-                tag: "div",
-                props: {
-                  className: "sumz-text-sm sumz-text-gray-600 sumz-pt-2",
-                  innerText: "Share Your Feedback & Ideas for Summarize and Beyond"
-                }
+                      createHomeContainer(),
+                      createPromptsContainer(),
+                      createPlansContainer(),
+                      createHelpContainer()
+                    ]
+                  },
+                ]
               }
             ],
-          }
+          },
         ],
       },
     ],
@@ -346,51 +391,32 @@ async function run() {
   root.style.zIndex = '9999'; // Make sure it's on top of other elements
 
   const innerContainerHeading = container.querySelector("#summarize__heading-text");
-  innerContainerHeading.innerHTML = '<p>Summarized <a href="https://chat.openai.com/chat" target="_blank" class="sumz-text-sm">by ChatGPT</a></p>';
 
   const innerContainerBody = container.querySelector("#summarize__body");
   innerContainerBody.innerHTML = '<p>Waiting for ChatGPT response...</p>';
 
+  const tabItems  = container.getElementsByClassName("summarize__tab-item");
+  const tabsByIds = {0:'body', 1: 'prompts', 2: 'plans', 3: 'help'}
+  for (let i = 0; i < tabItems.length; i++) {
+    if(i > 0){
+      container.querySelector("#summarize__" + tabsByIds[i]).style.display = 'none';
+    }
+
+    tabItems[i].addEventListener("click", function () {
+      for (let count = 0; count < tabItems.length; count++) {
+        tabItems[count].classList.remove("sumz-border-b-2", "sumz-border-violet-400")
+        container.querySelector("#summarize__" + tabsByIds[count]).style.display = 'none';
+      } 
+      tabItems[i].classList.add("sumz-border-b-2", "sumz-border-violet-400")
+      container.querySelector("#summarize__" + tabsByIds[i]).style.display = 'block';
+    })
+  }
+
+  tabItems[0].classList.add("sumz-border-b-2", "sumz-border-violet-400")
+
   const closeButton = container.querySelector("#summarize__close-button");
   closeButton.addEventListener("click", function () {
     document.body.removeChild(root);
-  });
-
-  // animated button
-  const letters = ["I", "n", "n", "o", "v", "a", "t", "e"];
-  const lettersContainer = container.querySelector("#summarize__letters-container");
-
-  // Add letters dynamically
-  letters.forEach((letter, index) => {
-    const letterSpan = document.createElement("span");
-    letterSpan.setAttribute("data-letter", letter);
-    letterSpan.className = "summarize__animated-letter sumz-relative sumz-inline-block sumz-h-[16px] sumz-leading-[16px] after:sumz-absolute after:sumz-left-0 after:sumz-top-full after:sumz-h-[16px] after:sumz-content-[attr(data-letter)]";
-    letterSpan.textContent = letter;
-    lettersContainer.appendChild(letterSpan);
-  });
-  // Add sparkles dynamically
-  const sparklesCount = 10;
-  const sparklesContainer = container.querySelector("#summarize__sparkles-container");
-  const sparkleCssClass = Array('sumz-fill-sky-600', 'sumz-fill-emerald-600', 'sumz-fill-indigo-600', 'sumz-fill-rose-600', 'sumz-fill-amber-600');
-
-  for (let i = 0; i < sparklesCount; i++) {
-    const sparkleSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-    sparkleSvg.classList.add(`sumz-absolute`, `sumz-left-1/2`, `sumz-top-1/2`, `sumz-opacity-0`, `sparkle-${i}`);
-    sparkleSvg.setAttribute("viewBox", "0 0 122 117");
-    const dimention = randomNumberBetween(10, 16);
-    sparkleSvg.setAttribute("width", `${dimention}`);
-    sparkleSvg.setAttribute("height", `${dimention}`);
-
-    const sparklePath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-    const sprinkleColor = sparkleCssClass[Math.floor(Math.random() * sparkleCssClass.length)];
-    sparkleSvg.classList.add(sprinkleColor);
-    sparklePath.setAttribute("d", "M64.39,2,80.11,38.76,120,42.33a3.2,3.2,0,0,1,1.83,5.59h0L91.64,74.25l8.92,39a3.2,3.2,0,0,1-4.87,3.4L61.44,96.19,27.09,116.73a3.2,3.2,0,0,1-4.76-3.46h0l8.92-39L1.09,47.92A3.2,3.2,0,0,1,3,42.32l39.74-3.56L58.49,2a3.2,3.2,0,0,1,5.9,0Z");
-
-    sparkleSvg.appendChild(sparklePath);
-    sparklesContainer.appendChild(sparkleSvg);
-  }
-  lettersContainer.addEventListener("mouseenter", function () {
-    onAnimationButtonClick(container, sparklesCount);
   });
 
   let content;
@@ -401,6 +427,8 @@ async function run() {
   } else {
     content = selection.toString();
   }
+
+  // console.log(chrome.runtime.connect())
 
   const port = chrome.runtime.connect();
   port.onMessage.addListener(function (msg) {
