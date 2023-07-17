@@ -1,6 +1,8 @@
 import * as DOMPurify from "dompurify";
 import html2md from "html-to-md";
 import CrossIC from "../../../assets/res/cross.svg";
+import WarnningIC from "../../../assets/res/warning_icon.svg";
+
 
 const randomNumberBetween = (min, max) => {
   return Math.floor(Math.random() * (max - min + 1) + min);
@@ -262,14 +264,60 @@ function createTabs() {
 function createHomeContainer() {
   let homeContainer = {
     tag: "div",
-    props: { className: "sumz-max-h-[80%] sumz-w-full sumz-overflow-y-auto sumz-px-4 sumz-py-4" },
+    props: {
+      id: "summarize__home",
+      className: "sumz-max-h-[80%] sumz-w-full sumz-overflow-y-auto"
+    },
     children: [
       {
         tag: "div",
         props: {
-          id: "summarize__body",
-          className: "sumz-text-3-xl sumz-mb-2 sumz-flex sumz-flex-col sumz-whitespace-pre-line sumz-text-gray-700"
+          id: "summarize__home_header",
+          className: "sumz-p-4"
         },
+        children: [
+          {
+            tag: "div",
+            props: {
+              id: "summarize__home_header_warning",
+              className: "sumz-w-full sumz-h-12 sumz-flex sumz-items-center sumz-justify-center sumz-mt-2 sumz-bg-teal-200 sumz-rounded-lg sumz-p-1"
+            },
+            children: [
+              { 
+                tag: "img", 
+                props: { id: "summarize__warning-icon", 
+                  className: "sumz-h-[24px] sumz-w-12 sumz-cursor-pointer sumz-mr-2", 
+                  src: WarnningIC, 
+                  alt: "warning" 
+                } 
+              },
+              {
+                tag: "span",
+                props: {
+                  className: "!sumz-text-[14px]",
+                  innerText: '"Extension name" already saved you 1 hour and 45 minutes of unnecessary reading.'
+                }
+              }
+            ]
+          },
+        ]
+      },
+      // divider
+      { tag: "div", props: { className: "sumz-w-full sumz-h-[2px] sumz-bg-gray-300" } },
+      {
+        tag: "div",
+        props: {
+          className: "sumz-p-4"
+        },
+        children: [
+          {
+            tag: "div",
+            props: {
+              id: "summarize__body",
+              className: "sumz-p-2 sumz-rounded-md sumz-max-h-[80px] sumz-overflow-auto sumz-bg-gray-200 sumz-text-3-xl sumz-mb-2 sumz-flex sumz-flex-col sumz-whitespace-pre-line sumz-text-gray-700"
+            },
+          },
+        ]
       },
     ],
   };
@@ -395,10 +443,10 @@ async function run() {
   const innerContainerBody = container.querySelector("#summarize__body");
   innerContainerBody.innerHTML = '<p>Waiting for ChatGPT response...</p>';
 
-  const tabItems  = container.getElementsByClassName("summarize__tab-item");
-  const tabsByIds = {0:'body', 1: 'prompts', 2: 'plans', 3: 'help'}
+  const tabItems = container.getElementsByClassName("summarize__tab-item");
+  const tabsByIds = { 0: 'home', 1: 'prompts', 2: 'plans', 3: 'help' }
   for (let i = 0; i < tabItems.length; i++) {
-    if(i > 0){
+    if (i > 0) {
       container.querySelector("#summarize__" + tabsByIds[i]).style.display = 'none';
     }
 
@@ -406,7 +454,7 @@ async function run() {
       for (let count = 0; count < tabItems.length; count++) {
         tabItems[count].classList.remove("sumz-border-b-2", "sumz-border-violet-400")
         container.querySelector("#summarize__" + tabsByIds[count]).style.display = 'none';
-      } 
+      }
       tabItems[i].classList.add("sumz-border-b-2", "sumz-border-violet-400")
       container.querySelector("#summarize__" + tabsByIds[i]).style.display = 'block';
     })
