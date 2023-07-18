@@ -241,7 +241,7 @@ const ce = ({ props, tag, children, name }, elementsObj) => {
 function createTabs() {
   let listTabsName = ["Home", "Prompts", "Plans", "Help"];
   let listTabs = listTabsName.map((tab, index) => {
-    let defaultClass = "summarize__tab-item sumz-cursor-pointer sumz-text-center hover:sumz-text-gray-600 hover:sumz-border-b-gray-300 hover:sumz-border-b-2 sumz-h-[24px] sumz-w-[20%] ";
+    let defaultClass = "summarize__tab-item sumz-text-gray-400 sumz-cursor-pointer sumz-text-center hover:sumz-text-gray-600 hover:sumz-border-b-gray-300 hover:sumz-border-b-2 sumz-h-[24px] sumz-w-[20%] ";
     return {
       tag: "li",
       props: {
@@ -283,7 +283,7 @@ function createHomeContainer() {
             tag: "div",
             props: {
               id: "summarize__home_header_warning",
-              className: "sumz-w-full sumz-h-12 sumz-flex sumz-items-center sumz-justify-center sumz-mt-2 sumz-bg-teal-200 sumz-rounded-lg sumz-p-1"
+              className: "sumz-w-full sumz-h-16 sumz-flex sumz-items-center sumz-justify-center sumz-mt-2 sumz-bg-teal-200 sumz-rounded-lg sumz-p-1"
             },
             children: [
               { 
@@ -298,7 +298,7 @@ function createHomeContainer() {
                 tag: "span",
                 props: {
                   id: "summarize__time_read_message",
-                  className: "!sumz-text-[14px]",
+                  className: "!sumz-text-[14px] sumz-text-teal-900 sumz-py-2",
                   innerText: 'Summarize already saved you ${readToTime} of unnecessary reading.'
                 }
               }
@@ -308,6 +308,13 @@ function createHomeContainer() {
       },
       // divider
       { tag: "div", props: { className: "sumz-w-full sumz-h-[2px] sumz-bg-gray-300" } },
+      {
+        tag: "p",
+        props: {
+          className: "sumz-text-md sumz-mt-3 sumz-ml-4",
+          innerText: "Summary by Chat GPT 3.5"
+        }
+      },
       {
         tag: "div",
         props: {
@@ -423,6 +430,29 @@ function createContainer() {
   });
 }
 
+function setTabs(container){
+  const tabItems = container.getElementsByClassName("summarize__tab-item");
+  const tabsByIds = { 0: 'home', 1: 'prompts', 2: 'plans', 3: 'help' }
+  const activeTabClasses = ["sumz-border-b-2", "sumz-border-violet-400", "sumz-text-gray-950"];
+
+  for (let i = 0; i < tabItems.length; i++) {
+    if (i > 0) {
+      container.querySelector("#summarize__" + tabsByIds[i]).style.display = 'none';
+    }
+
+    tabItems[i].addEventListener("click", function () {
+      for (let count = 0; count < tabItems.length; count++) {
+        tabItems[count].classList.remove(...activeTabClasses)
+        container.querySelector("#summarize__" + tabsByIds[count]).style.display = 'none';
+      }
+      tabItems[i].classList.add(...activeTabClasses)
+      container.querySelector("#summarize__" + tabsByIds[i]).style.display = 'block';
+    })
+  }
+
+  tabItems[0].classList.add(...activeTabClasses)
+}
+
 async function run() {
   const container = createContainer();
 
@@ -445,29 +475,12 @@ async function run() {
   const innerContainerBody = container.querySelector("#summarize__body");
   innerContainerBody.innerHTML = '<p>Waiting for ChatGPT response...</p>';
 
-  const tabItems = container.getElementsByClassName("summarize__tab-item");
-  const tabsByIds = { 0: 'home', 1: 'prompts', 2: 'plans', 3: 'help' }
-  for (let i = 0; i < tabItems.length; i++) {
-    if (i > 0) {
-      container.querySelector("#summarize__" + tabsByIds[i]).style.display = 'none';
-    }
-
-    tabItems[i].addEventListener("click", function () {
-      for (let count = 0; count < tabItems.length; count++) {
-        tabItems[count].classList.remove("sumz-border-b-2", "sumz-border-violet-400")
-        container.querySelector("#summarize__" + tabsByIds[count]).style.display = 'none';
-      }
-      tabItems[i].classList.add("sumz-border-b-2", "sumz-border-violet-400")
-      container.querySelector("#summarize__" + tabsByIds[i]).style.display = 'block';
-    })
-  }
-
-  tabItems[0].classList.add("sumz-border-b-2", "sumz-border-violet-400")
-
   const closeButton = container.querySelector("#summarize__close-button");
   closeButton.addEventListener("click", function () {
     document.body.removeChild(root);
   });
+
+  setTabs(container)
 
   let content;
   let selection = window.getSelection();
