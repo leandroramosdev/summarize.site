@@ -173,9 +173,7 @@ function getContentOfArticle() {
 
   let content = DOMPurify.sanitize(pageSelectedContainer.innerHTML);
   content = html2md(content);
-
-  let timeToRead = calculateReadTime(content);
-
+  
   return content;
 }
 
@@ -479,6 +477,8 @@ async function run() {
   } else {
     content = selection.toString();
   }
+
+  const readTime = calculateReadTime(content)
 
   const port = chrome.runtime.connect();
   port.onMessage.addListener(function (msg) {
