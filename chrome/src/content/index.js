@@ -3,6 +3,8 @@ import html2md from "html-to-md";
 import CrossIC from "../../../assets/res/cross.svg";
 import WarnningIC from "../../../assets/res/warning_icon.svg";
 
+//Services
+import { calculateReadTime } from "../../../services/utils";
 
 const randomNumberBetween = (min, max) => {
   return Math.floor(Math.random() * (max - min + 1) + min);
@@ -171,6 +173,9 @@ function getContentOfArticle() {
 
   let content = DOMPurify.sanitize(pageSelectedContainer.innerHTML);
   content = html2md(content);
+
+  let timeToRead = calculateReadTime(content);
+
   return content;
 }
 
@@ -294,8 +299,9 @@ function createHomeContainer() {
               {
                 tag: "span",
                 props: {
+                  id: "summarize__time_read_message",
                   className: "!sumz-text-[14px]",
-                  innerText: '"Extension name" already saved you 1 hour and 45 minutes of unnecessary reading.'
+                  innerText: 'Summarize already saved you ${readToTime} of unnecessary reading.'
                 }
               }
             ]
@@ -314,7 +320,7 @@ function createHomeContainer() {
             tag: "div",
             props: {
               id: "summarize__body",
-              className: "sumz-p-2 sumz-rounded-md sumz-max-h-[80px] sumz-overflow-auto sumz-bg-gray-200 sumz-text-3-xl sumz-mb-2 sumz-flex sumz-flex-col sumz-whitespace-pre-line sumz-text-gray-700"
+              className: "sumz-p-2 sumz-rounded-md sumz-max-h-[160px] sumz-overflow-auto sumz-bg-gray-200 sumz-text-3-xl sumz-mb-2 sumz-flex sumz-flex-col sumz-whitespace-pre-line sumz-text-gray-700"
             },
           },
         ]
@@ -438,8 +444,6 @@ async function run() {
   root.style.position = 'fixed';
   root.style.zIndex = '9999'; // Make sure it's on top of other elements
 
-  const innerContainerHeading = container.querySelector("#summarize__heading-text");
-
   const innerContainerBody = container.querySelector("#summarize__body");
   innerContainerBody.innerHTML = '<p>Waiting for ChatGPT response...</p>';
 
@@ -475,8 +479,6 @@ async function run() {
   } else {
     content = selection.toString();
   }
-
-  // console.log(chrome.runtime.connect())
 
   const port = chrome.runtime.connect();
   port.onMessage.addListener(function (msg) {
