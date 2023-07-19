@@ -1,6 +1,7 @@
 import * as DOMPurify from "dompurify";
 import html2md from "html-to-md";
 import CrossIC from "../../../assets/res/cross.svg";
+import { createContent } from "../../../services/content";
 
 // Check given item against blacklist, return null if in blacklist
 const blacklist = ["comment"];
@@ -159,69 +160,7 @@ const ce = ({ props, tag, children, name }, elementsObj) => {
 };
 
 function createContainer() {
-  return ce({
-    tag: "div",
-    props: { className: "summarize-gpt-container" },
-    children: [
-      {
-        tag: "div",
-        props: { className: "summarize__main-body" },
-        children: [
-          {
-            tag: "div",
-            props: { className: "summarize__main-body__top-bar" },
-            children: [
-              {
-                tag: "div",
-                props: { className: "summarize__main-body__top-bar__rhs" },
-                children: [
-                  {
-                    tag: "div",
-                    props: {
-                      className: "summarize__main-body__top-bar__rhs__element",
-                    },
-                    children: [
-                      {
-                        tag: "div",
-                        props: {
-                          onclick: () => {
-                            const element = document.querySelector(
-                              ".summarize-gpt-container"
-                            );
-                            element.parentNode.removeChild(element);
-                          },
-                          className:
-                            "summarize__main-body__top-bar__rhs__element__closeButton",
-                        },
-                        children: [{ tag: "img", props: { src: CrossIC } }],
-                      },
-                    ],
-                  },
-                ],
-              },
-            ],
-          },
-          {
-            tag: "div",
-            props: { className: "summarize__content-container" },
-            children: [
-              {
-                tag: "div",
-                props: { className: "summarize__content-outer-container" },
-                children: [
-                  {
-                    tag: "div",
-                    props: { className: "summarize__content-inner-container" },
-                    children: [],
-                  },
-                ],
-              },
-            ],
-          },
-        ],
-      },
-    ],
-  });
+  return ce(createContent());
 }
 
 function copyTextToClipboard(text) {
