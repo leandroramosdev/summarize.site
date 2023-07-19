@@ -299,7 +299,7 @@ function createHomeContainer() {
                 props: {
                   id: "summarize__time_read_message",
                   className: "!sumz-text-[14px] sumz-text-teal-900 sumz-py-2",
-                  innerText: 'Summarize already saved you ${readToTime} of unnecessary reading.'
+                  innerText: 'Summarize already saved you ${readTime} of unnecessary reading.'
                 }
               }
             ]
@@ -342,8 +342,23 @@ function createPromptsContainer() {
     props: {
       id: "summarize__prompts",
       className: "",
-      innerHTML: "prompts"
     },
+    children: [
+      {
+        tag: "p",
+        props: {
+          className: "sumz-text-md sumz-ml-4 sumz-my-3",
+          innerText: "Summarize options"
+        }
+      },
+      {
+        tag: "small",
+        props: {
+          className: "!sumz-text-sm sumz-text-md sumz-mt-3 sumz-ml-4",
+          innerText: "Prompt to use"
+        }
+      }
+    ]
   };
 
   return promptsContainer;
@@ -492,6 +507,9 @@ async function run() {
   }
 
   const readTime = calculateReadTime(content)
+  const innerWarningHeader = container.querySelector("#summarize__time_read_message");
+  const timeReadMessage = innerWarningHeader.innerHTML.replace("${readTime}", readTime)
+  innerWarningHeader.innerHTML = timeReadMessage;
 
   const port = chrome.runtime.connect();
   port.onMessage.addListener(function (msg) {
