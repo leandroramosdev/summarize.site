@@ -1,6 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: ['./chrome/src/**/*.js', './firefox/src/**/*.js'],
+  content: ['./chrome/src/**/*.js', './firefox/src/**/*.js', './services/content.js'],
   prefix: 'sumz-',
   theme: {
     extend: {
