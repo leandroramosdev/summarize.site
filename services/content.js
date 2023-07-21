@@ -59,9 +59,9 @@ export function createContent() {
 }
 
 function createTabs() {
+    let defaultClass = "summarize__tab-item sumz-text-gray-700 sumz-cursor-pointer sumz-text-center hover:sumz-text-gray-900 hover:sumz-border-b-gray-300 hover:sumz-border-b-2 sumz-h-[24px] sumz-w-[20%] ";
     let listTabsName = ["Home", "Prompts", "Plans", "Help"];
     let listTabs = listTabsName.map((tab, index) => {
-        let defaultClass = "summarize__tab-item sumz-text-gray-400 sumz-cursor-pointer sumz-text-center hover:sumz-text-gray-600 hover:sumz-border-b-gray-300 hover:sumz-border-b-2 sumz-h-[24px] sumz-w-[20%] ";
         return {
             tag: "li",
             props: {
@@ -103,7 +103,7 @@ function createHomeContainer() {
                         tag: "div",
                         props: {
                             id: "summarize__home_header_warning",
-                            className: "sumz-w-full sumz-h-16 sumz-flex sumz-items-center sumz-justify-center sumz-mt-2 sumz-bg-teal-200 sumz-rounded-lg sumz-p-1"
+                            className: "sumz-w-full sumz-h-16 sumz-flex sumz-items-center sumz-justify-center sumz-bg-teal-200 sumz-rounded-lg sumz-p-1"
                         },
                         children: [
                             {
@@ -118,7 +118,7 @@ function createHomeContainer() {
                             {
                                 tag: "span",
                                 props: {
-                                    id: "summarize__time_read_message",
+                                    id: "summarize__time-read-message",
                                     className: "!sumz-text-[14px] sumz-text-teal-900 sumz-py-2",
                                     innerText: 'Summarize already saved you ${readTime} of unnecessary reading.'
                                 }
@@ -130,27 +130,45 @@ function createHomeContainer() {
             // divider
             { tag: "div", props: { className: "sumz-w-full sumz-h-[2px] sumz-bg-gray-300" } },
             {
-                tag: "p",
+                tag: "button",
                 props: {
-                    className: "sumz-text-md sumz-mt-3 sumz-ml-4",
-                    innerText: "Summary by Chat GPT 3.5"
+                    id: "summarize__bt-start-summary",
+                    className: "sumz-m-4 sumz-w-[90%] sumz-bg-violet-500 hover:sumz-bg-violet-700 sumz-text-white sumz-py-2 sumz-px-4 sumz-rounded",
+                    innerText: "Summaryze"
                 }
             },
             {
                 tag: "div",
                 props: {
-                    className: "sumz-p-4"
+                    id: "summarize__body-container",
+                    className: "hidden"
                 },
                 children: [
                     {
+                        tag: "p",
+                        props: {
+                            className: "sumz-text-md sumz-mt-3 sumz-ml-4",
+                            innerText: "Summary by Chat GPT 3.5"
+                        }
+                    },
+                    {
                         tag: "div",
                         props: {
-                            id: "summarize__body",
-                            className: "sumz-p-2 sumz-rounded-md sumz-max-h-[160px] sumz-overflow-auto sumz-bg-gray-200 sumz-text-3-xl sumz-mb-2 sumz-flex sumz-flex-col sumz-whitespace-pre-line sumz-text-gray-700"
+                            className: "sumz-p-4"
                         },
+                        children: [
+                            {
+                                tag: "div",
+                                props: {
+                                    id: "summarize__body",
+                                    className: "sumz-p-2 sumz-rounded-md sumz-max-h-[160px] sumz-overflow-auto sumz-bg-gray-200 sumz-text-3-xl sumz-mb-2 sumz-flex sumz-flex-col sumz-whitespace-pre-line sumz-text-gray-700"
+                                },
+                            },
+                        ]
                     },
                 ]
             },
+            
         ],
     };
 
@@ -186,13 +204,46 @@ function createPromptsContainer() {
 }
 
 function createPlansContainer() {
+    let defaultClass = "sumz-shadow-sm sumz-p-4 sumz-w-full sumz-h-[40px] sumz-mb-4 sumz-flex sumz-items-center sumz-justify-between";
+
+    let listPlans = [
+        {name: "Free", value: 0},
+        {name: "Premium", value: 100}
+    ];
+
+    let plansCard = listPlans.map((plan, index) => {
+        return {
+            tag: "div",
+            props: {
+                id: "summarize__plan-item-" + index,
+                className: defaultClass,
+            },
+            children: [
+                {
+                    tag: "span",
+                    props: {
+                        className: "",
+                        innerText: plan.name
+                    }
+                },
+                {
+                    tag: "input",
+                    props: {
+                        type: "radio",
+                        name: "plan"
+                    }
+                }
+            ]
+        }
+    })
+
     let plansContainer = {
         tag: "div",
         props: {
             id: "summarize__plans",
-            className: "",
-            innerHTML: "plans"
+            className: "sumz-p-4 sumz-w-full"
         },
+        children: plansCard 
     };
 
     return plansContainer;

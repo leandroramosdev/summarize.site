@@ -172,7 +172,7 @@ function getContentOfArticle() {
 
   let content = DOMPurify.sanitize(pageSelectedContainer.innerHTML);
   content = html2md(content);
-  
+
   return content;
 }
 
@@ -241,13 +241,14 @@ function createContainer() {
   return ce(createContent());
 }
 
-function setTabs(container){
+function setTabs(container) {
   const tabItems = container.getElementsByClassName("summarize__tab-item");
   const tabsByIds = { 0: 'home', 1: 'prompts', 2: 'plans', 3: 'help' }
   const activeTabClasses = ["sumz-border-b-2", "sumz-border-violet-400", "sumz-text-gray-950"];
 
   for (let i = 0; i < tabItems.length; i++) {
     if (i > 0) {
+      
       container.querySelector("#summarize__" + tabsByIds[i]).style.display = 'none';
     }
 
@@ -262,6 +263,49 @@ function setTabs(container){
   }
 
   tabItems[0].classList.add(...activeTabClasses)
+}
+
+function setBodyInner(container) {
+  const bodyContainer = container.querySelector("#summarize__body-container");
+  bodyContainer.style.display = 'none';
+
+  let content = getContent();
+
+  const innerContainerBody = container.querySelector("#summarize__body");
+  innerContainerBody.innerHTML = '<p>Waiting for ChatGPT response...</p>';
+
+  const btStartSummarize = container.querySelector("#summarize__bt-start-summary");
+  btStartSummarize.addEventListener("click", function () {
+    btStartSummarize.style.display = 'none';
+    bodyContainer.style.display = 'block';
+
+    const port = chrome.runtime.connect();
+    port.onMessage.addListener(function (msg) {
+      if (msg.answer) {
+        console.log(msg.answer)
+        innerContainerBody.innerHTML = msg.answer;
+      } else if (msg.error === "UNAUTHORIZED") {
+        innerContainerBody.innerHTML =
+          '<p>Please login at <a href="https://chat.openai.com" target="_blank">chat.openai.com</a></p>';
+      } else {
+        innerContainerBody.innerHTML = "<p>Failed to load response from ChatGPT</p>";
+      }
+    });
+    port.postMessage({ content });
+  })
+}
+
+function getContent(){
+  let content;
+  let selection = window.getSelection();
+
+  if (selection.isCollapsed) {
+    content = getContentOfArticle();
+  } else {
+    content = selection.toString();
+  }
+
+  return content;
 }
 
 async function run() {
@@ -283,9 +327,6 @@ async function run() {
   root.style.position = 'fixed';
   root.style.zIndex = '9999'; // Make sure it's on top of other elements
 
-  const innerContainerBody = container.querySelector("#summarize__body");
-  innerContainerBody.innerHTML = '<p>Waiting for ChatGPT response...</p>';
-
   const closeButton = container.querySelector("#summarize__close-button");
   closeButton.addEventListener("click", function () {
     document.body.removeChild(root);
@@ -293,32 +334,14 @@ async function run() {
 
   setTabs(container)
 
-  let content;
-  let selection = window.getSelection();
-
-  if (selection.isCollapsed) {
-    content = getContentOfArticle();
-  } else {
-    content = selection.toString();
-  }
+  let content = getContent();
 
   const readTime = calculateReadTime(content)
-  const innerWarningHeader = container.querySelector("#summarize__time_read_message");
+  const innerWarningHeader = container.querySelector("#summarize__time-read-message");
   const timeReadMessage = innerWarningHeader.innerHTML.replace("${readTime}", readTime)
   innerWarningHeader.innerHTML = timeReadMessage;
 
-  const port = chrome.runtime.connect();
-  port.onMessage.addListener(function (msg) {
-    if (msg.answer) {
-      innerContainerBody.innerHTML = msg.answer;
-    } else if (msg.error === "UNAUTHORIZED") {
-      innerContainerBody.innerHTML =
-        '<p>Please login at <a href="https://chat.openai.com" target="_blank">chat.openai.com</a></p>';
-    } else {
-      innerContainerBody.innerHTML = "<p>Failed to load response from ChatGPT</p>";
-    }
-  });
-  port.postMessage({ content });
+  setBodyInner(container)
 }
 
 run();
