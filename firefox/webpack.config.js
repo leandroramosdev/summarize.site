@@ -31,6 +31,10 @@ module.exports = {
         type: 'asset/inline',
       },
       {
+        test: /\.webp$/,
+        type: 'asset/inline',
+      },
+      {
         test: /\.css$/i,
         use: 'css-loader',
       },

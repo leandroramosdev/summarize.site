@@ -1,5 +1,5 @@
 import CrossIC from "../assets/res/cross.svg";
-import WarnningIC from "../assets/res/warning_icon.svg";
+import WarnningIC from "../assets/res/warning_icon.webp";
 
 export function createContent() {
     const content = {

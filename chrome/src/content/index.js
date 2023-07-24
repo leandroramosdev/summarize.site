@@ -5,59 +5,6 @@ import html2md from "html-to-md";
 import { calculateReadTime } from "../../../services/utils";
 import { createContent } from "../../../services/content";
 
-const randomNumberBetween = (min, max) => {
-  return Math.floor(Math.random() * (max - min + 1) + min);
-};
-
-const onAnimationButtonClick = (container, sparklesCount) => {
-  // Letter animation
-  container.querySelectorAll('.summarize__animated-letter').forEach((el, i) => {
-    el.animate([
-      { transform: 'translateY(0px)' },
-      { transform: 'translateY(-16px)' },
-    ], {
-      duration: 200,
-      delay: i * 50,
-      fill: 'forwards'
-    });
-  });
-
-  // Sparkle animation
-  for (let i = 0; i < sparklesCount; i++) {
-    const sparkle = container.querySelector(`.sparkle-${i}`);
-    sparkle.animate([
-      { transform: 'translate(0px, 0px)', opacity: 0 },
-      { transform: `translate(${randomNumberBetween(-100, 100)}px, ${randomNumberBetween(-100, 100)}px)`, opacity: 1 },
-    ], {
-      duration: 500,
-      easing: 'ease-out',
-      fill: 'forwards'
-    });
-
-    // Add fade-out animation after the previous animation
-    sparkle.animate([
-      { opacity: 1 },
-      { opacity: 0 }
-    ], {
-      delay: 500, // Delay the start of the fade-out animation by the duration of the previous animation
-      duration: 500, // Set the duration for the fade-out animation
-      easing: 'ease-in',
-      fill: 'forwards'
-    });
-  }
-
-  // Button scaling animation
-  const button = container.querySelector('#summarize__animation-button');
-  button.animate([
-    { transform: 'scale(1)' },
-    { transform: 'scale(0.8)' },
-    { transform: 'scale(1)' }
-  ], {
-    duration: 200,
-    fill: 'forwards'
-  });
-};
-
 // Check given item against blacklist, return null if in blacklist
 const blacklist = ["comment"];
 function checkAgainstBlacklist(elem, level) {
