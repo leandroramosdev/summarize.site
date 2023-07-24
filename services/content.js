@@ -180,23 +180,39 @@ function createPromptsContainer() {
         tag: "div",
         props: {
             id: "summarize__prompts",
-            className: "",
+            className: "sumz-px-4 sumz-py-2",
         },
         children: [
             {
                 tag: "p",
                 props: {
-                    className: "sumz-text-md sumz-ml-4 sumz-my-3",
+                    className: "sumz-text-md sumz-my-3",
                     innerText: "Summarize options"
                 }
             },
             {
                 tag: "small",
                 props: {
-                    className: "!sumz-text-sm sumz-text-md sumz-mt-3 sumz-ml-4",
+                    className: "!sumz-text-sm sumz-text-md sumz-mt-3",
                     innerText: "Prompt to use"
                 }
-            }
+            },
+            {
+                tag: "div",
+                props: {
+                    className: "sumz-mt-2"
+                },
+                children: [
+                    {
+                        tag: "input",
+                        props: {
+                            type: "text",
+                            className: "sumz-shadow sumz-appearance-none sumz-border sumz-rounded sumz-w-full sumz-py-2 sumz-px-3 sumz-text-gray-700 sumz-leading-tight sumz-focus:outline-none sumz-focus:shadow-outline",
+                        }
+                    }
+                ]
+            },
+            
         ]
     };
 
@@ -207,8 +223,8 @@ function createPlansContainer() {
     let defaultClass = "sumz-shadow-sm sumz-p-4 sumz-w-full sumz-h-[40px] sumz-mb-4 sumz-flex sumz-items-center sumz-justify-between";
 
     let listPlans = [
-        {name: "Free", value: 0},
-        {name: "Premium", value: 100}
+        {name: "Free", price: 0},
+        {name: "Premium", price: 100}
     ];
 
     let plansCard = listPlans.map((plan, index) => {
@@ -227,12 +243,26 @@ function createPlansContainer() {
                     }
                 },
                 {
-                    tag: "input",
-                    props: {
-                        type: "radio",
-                        name: "plan"
-                    }
-                }
+                    tag: "div",
+                    props: {},
+                    children: [
+                        {
+                            tag: "label",
+                            props: {
+                                className: "sumz-mr-2",
+                                innerText: `${'$' + plan.price}`
+                            }
+                        },
+                        {
+                            tag: "input",
+                            props: {
+                                type: "radio",
+                                name: "plan"
+                            }
+                        }
+                    ]
+                },
+                
             ]
         }
     })

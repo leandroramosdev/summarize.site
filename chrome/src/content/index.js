@@ -248,7 +248,6 @@ function setTabs(container) {
 
   for (let i = 0; i < tabItems.length; i++) {
     if (i > 0) {
-      
       container.querySelector("#summarize__" + tabsByIds[i]).style.display = 'none';
     }
 
