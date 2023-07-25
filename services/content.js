@@ -200,7 +200,7 @@ function createPromptsContainer() {
             {
                 tag: "div",
                 props: {
-                    className: "sumz-mt-2"
+                    className: "sumz-flex sumz-flex-col sumz-justify-between sumz-mt-2 sumz-w-full"
                 },
                 children: [
                     {
@@ -209,10 +209,25 @@ function createPromptsContainer() {
                             type: "text",
                             className: "sumz-shadow sumz-appearance-none sumz-border sumz-rounded sumz-w-full sumz-py-2 sumz-px-3 sumz-text-gray-700 sumz-leading-tight sumz-focus:outline-none sumz-focus:shadow-outline",
                         }
-                    }
+                    },
+                    {
+                        tag: "div",
+                        props: {
+                            className: "sumz-w-full sumz-flex sumz-justify-end",
+                        },
+                        children: [
+                            {
+                                tag: "button",
+                                props: {
+                                    id: "summarize__bt-search-prompt",
+                                    className: "sumz-w-[40%] sumz-mt-2 sumz-bg-violet-500 hover:sumz-bg-violet-700 sumz-text-white sumz-py-2 sumz-px-4 sumz-rounded",
+                                    innerText: "search"
+                                }
+                            },
+                        ]
+                    },
                 ]
             },
-            
         ]
     };
 
@@ -257,12 +272,12 @@ function createPlansContainer() {
                             tag: "input",
                             props: {
                                 type: "radio",
+                                className: "summarize_plan-checkbox",
                                 name: "plan"
-                            }
+                            },
                         }
                     ]
-                },
-                
+                },  
             ]
         }
     })
@@ -273,7 +288,30 @@ function createPlansContainer() {
             id: "summarize__plans",
             className: "sumz-p-4 sumz-w-full"
         },
-        children: plansCard 
+        children:[
+            {
+                tag: "div",
+                props: {},
+                children: plansCard 
+            },
+            {
+                tag: "div",
+                props: {
+                    className: "sumz-w-full sumz-flex sumz-justify-end",
+                },
+                children: [
+                    {
+                        tag: "button",
+                        props: {
+                            id: "summarize__bt-choose-plan",
+                            className: "sumz-w-[40%] sumz-mt-2 sumz-bg-gray-500 sumz-text-white sumz-py-2 sumz-px-4 sumz-rounded",
+                            innerText: "choose plan",
+                            disabled: true
+                        }
+                    },
+                ]
+            },
+        ]
     };
 
     return plansContainer;
