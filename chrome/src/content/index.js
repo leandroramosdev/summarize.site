@@ -254,6 +254,24 @@ function getContent(){
   return content;
 }
 
+function setPlans(container){
+  const radioChoosePlan = container.getElementsByClassName("summarize_plan-checkbox");
+  const activeButtonClasses = ["!sumz-bg-violet-500"];
+  const buttonChoosePlan = container.querySelector("#summarize__bt-choose-plan");
+
+  for (let i = 0; i < radioChoosePlan.length; i++) {
+    radioChoosePlan[i].addEventListener("click", function () {
+      if(i > 0){
+        buttonChoosePlan.disabled = false;
+        buttonChoosePlan.classList.add(...activeButtonClasses)
+      } else {
+        buttonChoosePlan.disabled = true;
+        buttonChoosePlan.classList.remove(...activeButtonClasses)
+      }
+    })
+  }
+}
+
 async function run() {
   const container = createContainer();
 
@@ -279,6 +297,7 @@ async function run() {
   });
 
   setTabs(container)
+  setPlans(container)
 
   let content = getContent();
 
