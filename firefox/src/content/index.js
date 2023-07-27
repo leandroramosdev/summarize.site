@@ -121,16 +121,19 @@ function getContentOfArticle() {
 }
 
 function addStylesheet(doc, link, classN) {
-  const path = browser.runtime.getURL(link),
-    styleLink = document.createElement("link");
+  if (typeof browser != 'undefined') {
+    const path = browser.runtime.getURL(link),
+      styleLink = document.createElement("link");
 
-  styleLink.setAttribute("rel", "stylesheet");
-  styleLink.setAttribute("type", "text/css");
-  styleLink.setAttribute("href", path);
+    styleLink.setAttribute("rel", "stylesheet");
+    styleLink.setAttribute("type", "text/css");
+    styleLink.setAttribute("href", path);
 
-  if (classN) styleLink.className = classN;
+    if (classN) styleLink.className = classN;
 
-  doc.head.appendChild(styleLink);
+    doc.head.appendChild(styleLink);
+  }
+
 }
 
 const ce = ({ props, tag, children, name }, elementsObj) => {
@@ -165,9 +168,9 @@ function createContainer() {
 
 function copyTextToClipboard(text) {
   var copyButton = document.querySelector("#copy-button");
-  navigator.clipboard.writeText(text).then(function() {
+  navigator.clipboard.writeText(text).then(function () {
     copyButton.textContent = 'Copied';
-  }, function() {
+  }, function () {
     copyButton.textContent = 'Failed';
   });
 }
@@ -193,27 +196,30 @@ async function run() {
     content = selection.toString();
   }
 
-  const port = browser.runtime.connect();
-  port.onMessage.addListener(function (msg) {
-    if (msg.answer) {
-      innerContainer.innerHTML = '<p><span class="prefix">Summarized </span> by <a href="https://chat.openai.com/chat" target="_blank">ChatGPT</a><button id="copy-button"> Copy</button>:<pre id="copy-text"></pre></p>';
-      innerContainer.querySelector("pre").textContent = msg.answer;
+  if (typeof browser != 'undefined') {
+    const port = browser.runtime.connect();
+    port.onMessage.addListener(function (msg) {
+      if (msg.answer) {
+        innerContainer.innerHTML = '<p><span class="prefix">Summarized </span> by <a href="https://chat.openai.com/chat" target="_blank">ChatGPT</a><button id="copy-button"> Copy</button>:<pre id="copy-text"></pre></p>';
+        innerContainer.querySelector("pre").textContent = msg.answer;
 
-      const copyButton = document.querySelector("#copy-button");
-      copyButton.addEventListener("click", function() {
-        var preElement = document.querySelector("#copy-text");
-        copyTextToClipboard(preElement.textContent);
-      });
+        const copyButton = document.querySelector("#copy-button");
+        copyButton.addEventListener("click", function () {
+          var preElement = document.querySelector("#copy-text");
+          copyTextToClipboard(preElement.textContent);
+        });
 
-      innerContainer.scrollTop = innerContainer.scrollHeight;
-    } else if (msg.error === "UNAUTHORIZED") {
-      innerContainer.innerHTML =
-        '<p class="prefix">Please login at <a href="https://chat.openai.com" target="_blank">chat.openai.com</a> first</p>';
-    } else {
-      innerContainer.innerHTML = "<p>Failed to load response from ChatGPT</p>";
-    }
-  });
-  port.postMessage({ content });
+        innerContainer.scrollTop = innerContainer.scrollHeight;
+      } else if (msg.error === "UNAUTHORIZED") {
+        innerContainer.innerHTML =
+          '<p class="prefix">Please login at <a href="https://chat.openai.com" target="_blank">chat.openai.com</a> first</p>';
+      } else {
+        innerContainer.innerHTML = "<p>Failed to load response from ChatGPT</p>";
+      }
+    });
+    port.postMessage({ content });
+  }
+
 }
 
 run();

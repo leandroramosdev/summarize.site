@@ -1,5 +1,6 @@
 import CrossIC from "../assets/res/cross.svg";
 import WarnningIC from "../assets/res/warning_icon.webp";
+import StarIC from "../assets/res/star.png";
 
 export function createContent() {
     const content = {
@@ -318,13 +319,34 @@ function createPlansContainer() {
 }
 
 function createHelpContainer() {
+    let defaultClass = "summarize_star sumz-cursor-pointer";
+    let listStars = [0, 1, 2, 3, 4];
+    let starsIcon = listStars.map(star => {
+        return {
+            tag: "img",
+            props: {
+                id: "summarize_star_" + star,
+                className: star > 0 ? defaultClass + " sumz-opacity-40" : defaultClass,
+                src: StarIC
+            }
+        }
+    })
+
     let helpContainer = {
         tag: "div",
         props: {
             id: "summarize__help",
-            className: "",
-            innerHTML: "help"
+            className: "sumz-px-4 sumz-py-2"
         },
+        children: [
+            {
+                tag: "div",
+                props: {
+                    className: "sumz-flex sumz-justify-between"
+                },
+                children: starsIcon
+            }
+        ]
     };
 
     return helpContainer;

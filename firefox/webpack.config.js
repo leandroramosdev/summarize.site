@@ -35,6 +35,10 @@ module.exports = {
         type: 'asset/inline',
       },
       {
+        test: /\.png$/,
+        type: 'asset/inline',
+      },
+      {
         test: /\.css$/i,
         use: 'css-loader',
       },

@@ -272,6 +272,23 @@ function setPlans(container){
   }
 }
 
+function setRateStars(container){
+  const rateStars = container.getElementsByClassName("summarize_star");
+  for (let i = 0; i < rateStars.length; i++) {
+    rateStars[i].addEventListener("click", function () {
+      for (let count = 0; count < rateStars.length; count++) {
+        if(i >= count){
+          rateStars[count].classList.remove("sumz-opacity-40");
+          rateStars[count].classList.add("sumz-opacity-100")
+        } else {
+          rateStars[count].classList.remove("sumz-opacity-100");
+          rateStars[count].classList.add("sumz-opacity-40");
+        }
+      }
+    })
+  }
+}
+
 async function run() {
   const container = createContainer();
 
@@ -298,6 +315,7 @@ async function run() {
 
   setTabs(container)
   setPlans(container)
+  setRateStars(container)
 
   let content = getContent();
 
