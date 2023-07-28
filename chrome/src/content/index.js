@@ -285,6 +285,10 @@ function setRateStars(container){
           rateStars[count].classList.add("sumz-opacity-40");
         }
       }
+
+      if(i >= 4){
+        window.open('https://tally.so/r/woD2eP', "_blank")
+      }
     })
   }
 }

@@ -340,6 +340,13 @@ function createHelpContainer() {
         },
         children: [
             {
+                tag: "p",
+                props: {
+                    className: "sumz-m-2",
+                    innerText: "Rate your experience using summarize"
+                }
+            },
+            {
                 tag: "div",
                 props: {
                     className: "sumz-flex sumz-justify-between"
